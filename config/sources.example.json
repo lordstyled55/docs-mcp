@@ -1,0 +1,40 @@
+[
+  {
+    "id": "local_docs",
+    "name": "Local Documentation",
+    "type": "local",
+    "url": "file:///path/to/your/docs",
+    "enabled": true,
+    "filters": {
+      "include": ["*.md", "*.txt", "*.json"],
+      "exclude": ["node_modules/**", ".git/**", "*.tmp"],
+      "maxDepth": 5,
+      "maxSize": 10485760
+    }
+  },
+  {
+    "id": "project_readme",
+    "name": "Project README Files",
+    "type": "local", 
+    "url": "file:///path/to/projects",
+    "enabled": true,
+    "filters": {
+      "include": ["**/README.md", "**/CHANGELOG.md", "**/docs/**/*.md"],
+      "exclude": ["**/node_modules/**", "**/.git/**"],
+      "maxDepth": 3,
+      "maxSize": 5242880
+    }
+  },
+  {
+    "id": "wiki_export",
+    "name": "Wiki Export",
+    "type": "local",
+    "url": "file:///path/to/wiki/export",
+    "enabled": false,
+    "filters": {
+      "include": ["*.html", "*.md"],
+      "maxDepth": 10,
+      "maxSize": 20971520
+    }
+  }
+]

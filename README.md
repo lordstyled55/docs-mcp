@@ -1,286 +1,343 @@
-# @mcpdotdirect/template-mcp-server
+# Auto-Gather MCP Server
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6)
+An MCP server that automatically discovers, collects, and organizes documentation from various sources. Built for the Model Context Protocol (MCP), this server provides AI assistants with intelligent access to your documentation ecosystem.
 
-A CLI tool to quickly get started building your very own MCP (Model Context Protocol) server using FastMCP
+## Features
 
-## 📋 Usage
+### 🔍 Multi-Source Documentation Collection
+- **Local Files**: Crawl local directories for documentation
+- **Git Repositories**: *(Coming soon)* Clone and index git repos
+- **Web Sources**: *(Coming soon)* Crawl websites and wikis
+- **API Sources**: *(Coming soon)* Pull from documentation APIs
 
-```bash
-# with npx
-npx @mcpdotdirect/create-mcp-server
+### 📄 Multi-Format Support
+- **Markdown** files (`.md`, `.markdown`)
+- **HTML** pages (`.html`, `.htm`)
+- **PDF** documents (`.pdf`)
+- **Text** files (`.txt`)
+- **JSON** data (`.json`)
 
-# Or with npm
-npm init @mcpdotdirect/mcp-server
-```
+### 🔎 Intelligent Search
+- **Fuzzy search** powered by Fuse.js
+- **Content highlighting** in search results
+- **Tag-based filtering** and organization
+- **Similarity search** for related documents
 
-## 🔭 What's Included
+### 🤖 AI-Powered Analysis
+- **Documentation analysis** for quality and completeness
+- **Gap identification** in coverage
+- **Improvement suggestions** for existing content
+- **Outline generation** based on existing docs
 
-The template includes:
+## Installation
 
-- Basic server setup with both stdio and HTTP transport options using FastMCP
-- Structure for defining MCP tools, resources, and prompts
-- TypeScript configuration
-- Development scripts and configuration
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
 
-## ✨ Features
+### Setup
 
-- **FastMCP**: Built using the FastMCP framework for simpler implementation
-- **Dual Transport Support**: Run your MCP server over stdio or HTTP
-- **TypeScript**: Full TypeScript support for type safety
-- **Extensible**: Easy to add custom tools, resources, and prompts
-
-## 🚀 Getting Started
-
-After creating your project:
-
-1. Install dependencies using your preferred package manager:
+1. **Clone or create project:**
    ```bash
-   # Using npm
+   git clone <repository-url>
+   cd auto-gather-mcp-server
+   ```
+
+2. **Install dependencies:**
+   ```bash
    npm install
-   
-   # Using yarn
-   yarn
-   
-   # Using pnpm
-   pnpm install
-   
-   # Using bun
-   bun install
    ```
 
-2. Start the server:
+3. **Build the project:**
    ```bash
-   # Start the stdio server
-   npm start
-   
-   # Or start the HTTP server
-   npm run start:http
+   npm run build
    ```
 
-3. For development with auto-reload:
-   ```bash
-   # Development mode with stdio
-   npm run dev
-   
-   # Development mode with HTTP
-   npm run dev:http
-   ```
+4. **Configure sources** (see Configuration section below)
 
-> **Note**: The default scripts in package.json use Bun as the runtime (e.g., `bun run src/index.ts`). If you prefer to use a different package manager or runtime, you can modify these scripts in your package.json file to use Node.js or another runtime of your choice.
+## Configuration
 
-## 📖 Detailed Usage
+### MCP Client Configuration
 
-### Transport Methods
-
-The MCP server supports two transport methods:
-
-1. **stdio Transport** (Command Line Mode):
-   - Runs on your **local machine**
-   - Managed automatically by Cursor
-   - Communicates directly via `stdout`
-   - Only accessible by you locally
-   - Ideal for personal development and tools
-
-2. **SSE Transport** (HTTP Web Mode):
-   - Can run **locally or remotely**
-   - Managed and run by you
-   - Communicates **over the network**
-   - Can be **shared** across machines
-   - Ideal for team collaboration and shared tools
-
-### Running the Server Locally
-
-#### stdio Transport (CLI Mode)
-
-Start the server in stdio mode for CLI tools:
-
-```bash
-# Start the stdio server
-npm start
-# or with other package managers
-yarn start
-pnpm start
-bun start
-
-# Start the server in development mode with auto-reload
-npm run dev
-# or
-yarn dev
-pnpm dev
-bun dev
-```
-
-#### HTTP Transport (Web Mode)
-
-Start the server in HTTP mode for web applications:
-
-```bash
-# Start the HTTP server
-npm run start:http
-# or
-yarn start:http
-pnpm start:http
-bun start:http
-
-# Start the HTTP server in development mode with auto-reload
-npm run dev:http
-# or
-yarn dev:http
-pnpm dev:http
-bun dev:http
-```
-
-By default, the HTTP server runs on port 3001. You can change this by setting the PORT environment variable:
-
-```bash
-# Start the HTTP server on a custom port
-PORT=8080 npm run start:http
-```
-
-### Connecting to the Server
-
-#### Connecting from Cursor
-
-To connect to your MCP server from Cursor:
-
-1. Open Cursor and go to Settings (gear icon in the bottom left)
-2. Click on "Features" in the left sidebar
-3. Scroll down to "MCP Servers" section
-4. Click "Add new MCP server"
-5. Enter the following details:
-   - Server name: `my-mcp-server` (or any name you prefer)
-   - For stdio mode:
-     - Type: `command`
-     - Command: The path to your server executable, e.g., `npm start`
-   - For SSE mode:
-     - Type: `url`
-     - URL: `http://localhost:3001/sse`
-6. Click "Save"
-
-#### Using mcp.json with Cursor
-
-For a more portable configuration, create an `.cursor/mcp.json` file in your project's root directory:
+Add to your MCP client configuration (e.g., Claude Desktop):
 
 ```json
 {
   "mcpServers": {
-    "my-mcp-stdio": {
-      "command": "npm",
-      "args": [
-        "start"
-      ],
-      "env": {
-        "NODE_ENV": "development"
-      }
-    },
-    "my-mcp-sse": {
-      "url": "http://localhost:3001/sse"
+    "auto-gather": {
+      "command": "node",
+      "args": ["/path/to/auto-gather-mcp-server/build/index.js"],
+      "cwd": "/path/to/auto-gather-mcp-server"
     }
   }
 }
 ```
 
-You can also create a global configuration at `~/.cursor/mcp.json` to make your MCP servers available in all your Cursor workspaces.
+### Documentation Sources
 
-Note: 
-- The `command` type entries run the server in stdio mode
-- The `url` type entry connects to the HTTP server using SSE transport
-- You can provide environment variables using the `env` field
-- When connecting via SSE with FastMCP, use the full URL including the `/sse` path: `http://localhost:3001/sse`
+Use the MCP tools to configure sources, or create a configuration manually:
 
-### Testing Your Server with CLI Tools
+1. **Add a local documentation source:**
+   ```javascript
+   // Use the add_source tool
+   {
+     "name": "My Project Docs",
+     "type": "local", 
+     "url": "file:///path/to/docs",
+     "filters": {
+       "include": ["*.md", "*.txt"],
+       "exclude": ["node_modules/**", ".git/**"],
+       "maxDepth": 5,
+       "maxSize": 10485760
+     }
+   }
+   ```
 
-FastMCP provides built-in tools for testing your server:
+2. **Example configuration** is provided in `config/sources.example.json`
+
+## Usage
+
+### Available Tools
+
+#### Source Management
+- **`add_source`** - Add new documentation sources
+- **`list_sources`** - View all configured sources
+- **`get_source`** - Get detailed source information
+- **`update_source`** - Modify source settings
+- **`delete_source`** - Remove sources and their documents
+- **`crawl_source`** - Manually trigger source crawling
+- **`crawl_all_sources`** - Crawl all enabled sources
+
+#### Document Access
+- **`search_docs`** - Search through collected documentation
+- **`get_document`** - Retrieve specific documents
+- **`get_recent_docs`** - Get recently updated documents
+- **`get_similar_docs`** - Find similar documents
+- **`get_stats`** - View collection statistics
+
+### Available Resources
+
+#### Live Data Access
+- **`docs://documents`** - Access all collected documents
+- **`docs://sources`** - View source configurations and status
+- **`docs://search/{query}`** - Live search results
+- **`docs://document/{id}`** - Individual document content
+- **`docs://stats`** - Collection statistics
+- **`docs://recent`** - Recently updated documents
+
+### Available Prompts
+
+#### AI-Powered Analysis
+- **`analyze_documentation`** - Comprehensive documentation analysis
+- **`suggest_improvements`** - AI-powered improvement suggestions
+- **`create_outline`** - Generate documentation outlines
+- **`summarize_content`** - Create content summaries
+- **`find_gaps`** - Identify documentation gaps
+
+## Examples
+
+### Basic Workflow
+
+1. **Add a documentation source:**
+   ```bash
+   # Via MCP tool call
+   add_source {
+     "name": "Project Documentation",
+     "type": "local",
+     "url": "file:///Users/me/projects/myapp/docs"
+   }
+   ```
+
+2. **Crawl the source:**
+   ```bash
+   crawl_source { "source_id": "source_123" }
+   ```
+
+3. **Search for information:**
+   ```bash
+   search_docs { 
+     "query": "authentication setup",
+     "limit": 10
+   }
+   ```
+
+4. **Get AI analysis:**
+   ```bash
+   analyze_documentation {
+     "focus_area": "API documentation"
+   }
+   ```
+
+### Advanced Search
 
 ```bash
-# Test with mcp-cli
-npx fastmcp dev server.js
+# Search with filters
+search_docs {
+  "query": "database configuration",
+  "types": ["markdown", "json"],
+  "tags": ["setup", "config"],
+  "threshold": 0.2
+}
 
-# Inspect with MCP Inspector
-npx fastmcp inspect server.ts
+# Find similar documents
+get_similar_docs {
+  "document_id": "doc_abc123",
+  "limit": 5
+}
 ```
 
-### Using Environment Variables
-
-You can customize the server using environment variables:
+### AI-Powered Analysis
 
 ```bash
-# Change the HTTP port (default is 3001)
-PORT=8080 npm run start:http
+# Analyze specific source
+analyze_documentation {
+  "source_id": "local_docs",
+  "focus_area": "getting started"
+}
 
-# Change the host binding (default is 0.0.0.0)
-HOST=127.0.0.1 npm run start:http
+# Find documentation gaps
+find_gaps {
+  "reference_topics": ["installation", "configuration", "troubleshooting"],
+  "comparison_source": "main_docs"
+}
+
+# Generate improvement suggestions
+suggest_improvements {
+  "document_id": "doc_123",
+  "criteria": "clarity"
+}
 ```
 
-## 🛠️ Adding Custom Tools and Resources
+## Architecture
 
-When adding custom tools, resources, or prompts to your FastMCP server:
+### Core Components
 
-### Tools
-
-```typescript
-server.addTool({
-  name: "hello_world",
-  description: "A simple hello world tool",
-  parameters: z.object({
-    name: z.string().describe("Name to greet")
-  }),
-  execute: async (params) => {
-    return `Hello, ${params.name}!`;
-  }
-});
+```
+src/
+├── core/
+│   ├── models/          # Data models (Document, Source)
+│   ├── services/        # Core business logic
+│   │   ├── storage.ts   # SQLite database operations
+│   │   ├── parser.ts    # Multi-format document parsing
+│   │   ├── crawler.ts   # Source crawling logic
+│   │   └── search.ts    # Search and indexing
+│   ├── tools.ts         # MCP tools implementation
+│   ├── resources.ts     # MCP resources implementation
+│   └── prompts.ts       # MCP prompts implementation
+└── index.ts             # Main server entry point
 ```
 
-### Resources
+### Data Storage
 
-```typescript
-server.addResourceTemplate({
-  uriTemplate: "example://{id}",
-  name: "Example Resource",
-  mimeType: "text/plain",
-  arguments: [
-    {
-      name: "id",
-      description: "Resource ID",
-      required: true,
-    },
-  ],
-  async load({ id }) {
-    return {
-      text: `This is an example resource with ID: ${id}`
-    };
-  }
-});
+- **SQLite database** for document storage and metadata
+- **File-based configuration** for source management
+- **In-memory search index** using Fuse.js
+
+### Supported File Types
+
+| Extension | Type | Parser |
+|-----------|------|--------|
+| `.md`, `.markdown` | Markdown | gray-matter + markdown-it |
+| `.html`, `.htm` | HTML | cheerio |
+| `.pdf` | PDF | pdf-parse |
+| `.txt` | Text | Built-in |
+| `.json` | JSON | Built-in |
+
+## Development
+
+### Scripts
+
+```bash
+npm run build      # Compile TypeScript
+npm run dev        # Watch mode compilation
+npm run start      # Start the server
+npm run clean      # Clean build artifacts
 ```
 
-### Prompts
+### Project Structure
 
-```typescript
-server.addPrompt({
-  name: "greeting",
-  description: "A simple greeting prompt",
-  arguments: [
-    {
-      name: "name",
-      description: "Name to greet",
-      required: true,
-    },
-  ],
-  load: async ({ name }) => {
-    return `Hello, ${name}! How can I help you today?`;
-  }
-});
+The server follows a modular architecture:
+
+- **Models**: Zod schemas for type safety
+- **Services**: Core business logic with clear interfaces
+- **Handlers**: MCP protocol implementations
+- **Storage**: SQLite with prepared statements
+- **Search**: Fuzzy search with configurable options
+
+### Adding New Source Types
+
+1. Extend the `SourceType` enum in `models/source.ts`
+2. Implement crawling logic in `CrawlerService`
+3. Add parsing logic if needed in `ParserService`
+4. Update tool schemas and handlers
+
+### Adding New File Types
+
+1. Add extension to `ParserService.getSupportedExtensions()`
+2. Implement parsing logic in `ParserService.parseFile()`
+3. Add appropriate content extraction methods
+
+## Troubleshooting
+
+### Common Issues
+
+**Database locked errors:**
+- Ensure only one server instance is running
+- Check file permissions in the `data/` directory
+
+**Source crawling fails:**
+- Verify file paths are accessible
+- Check filter patterns (glob syntax)
+- Review source status with `get_source` tool
+
+**Search returns no results:**
+- Rebuild search index: restart the server
+- Check if documents were successfully crawled
+- Verify search query and filters
+
+**Performance issues:**
+- Reduce `maxDepth` in source filters
+- Set appropriate `maxSize` limits
+- Consider excluding large binary files
+
+### Debug Mode
+
+Set environment variable for verbose logging:
+```bash
+DEBUG=auto-gather* npm start
 ```
 
-## 📚 Documentation
+## Contributing
 
-For more information about FastMCP, visit [FastMCP GitHub Repository](https://github.com/punkpeye/fastmcp).
+1. Fork the repository
+2. Create a feature branch
+3. Make changes with tests
+4. Submit a pull request
 
-For more information about the Model Context Protocol, visit the [MCP Documentation](https://modelcontextprotocol.io/introduction).
+## License
 
-## 📄 License
+MIT License - see LICENSE file for details.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-# docs-mcp
+## Roadmap
+
+### Phase 2: Enhanced Sources
+- [ ] Git repository support
+- [ ] Web crawling capabilities  
+- [ ] API documentation sources
+- [ ] Webhook notifications
+
+### Phase 3: Advanced Features
+- [ ] Real-time collaboration
+- [ ] Advanced AI analysis
+- [ ] Custom export templates
+- [ ] Multi-language support
+
+### Phase 4: Enterprise Features
+- [ ] Authentication and authorization
+- [ ] Team workflow integration
+- [ ] Advanced analytics dashboard
+- [ ] Custom plugin architecture
+
+---
+
+**Need help?** Check the documentation, search existing issues, or create a new issue for support.
